@@ -1,0 +1,27 @@
+{
+  "name": "electron-book",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "rebuild": "electron-rebuild -f -w better-sqlite3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.0",
+    "better-sqlite3": "^7.6.2",
+    "electron": "^19.0.8",
+    "electron-builder": "^23.6.0",
+    "electron-rebuild": "^3.2.9",
+    "keyv": "^4.5.2",
+    "pinia": "^2.0.23",
+    "sass": "^1.56.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0",
+    "vite-plugin-optimizer": "^1.4.0",
+    "vue": "^3.2.37",
+    "vue-router": "^4.1.6",
+    "vue-tsc": "^0.38.4"
+  }
+}
