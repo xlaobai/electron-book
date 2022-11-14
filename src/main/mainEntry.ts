@@ -1,8 +1,6 @@
 import { app, autoUpdater, BrowserWindow } from "electron";
 import { CustomScheme } from "./CustomScheme";
 import { CommonWindowEvent } from "./CommonWindowEvent";
-const Database = require("better-sqlite3");
-const db = new Database("db.db", { verbose: console.log, nativeBinding: "./node_modules/better-sqlite3/build/Release/better_sqlite3.node" });
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = "true";
 app.on("browser-window-created", (e, win) => {
@@ -27,6 +25,7 @@ app.whenReady().then(() => {
   mainWindow = new BrowserWindow(config);
 
   mainWindow.webContents.openDevTools({ mode: "undocked" });
+  console.log("openDevTools", process.argv);
   if (process.argv[2]) {
     mainWindow.loadURL(process.argv[2]);
   } else {

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { Ref, ref } from "vue";
-import { ModelChat } from "../../model/ModelChat";
+import { ModelChat } from "../../../model/ModelChat";
 import { useMessageStore } from "./useMessageStore";
 // 初始化模拟数据
 let prepareData = () => {

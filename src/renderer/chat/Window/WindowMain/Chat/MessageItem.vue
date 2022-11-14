@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ModelMessage } from "../../../../model/ModelMessage";
+import { ModelMessage } from "../../../../../model/ModelMessage";
 defineProps<{ data: ModelMessage }>();
 </script>
 <template>

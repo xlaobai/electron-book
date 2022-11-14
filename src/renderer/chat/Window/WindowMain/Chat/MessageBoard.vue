@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ModelChat } from "../../../../model/ModelChat";
+import { ModelChat } from "../../../../../model/ModelChat";
 import BarTop from "../../../Component/BarTop.vue";
 // import { useChatStore } from "../../../store/useChatStore";
 import { useMessageStore } from "../../../store/useMessageStore";
