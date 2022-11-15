@@ -1,3 +1,5 @@
+import add from "@mini-vue/reactivity";
+console.log("add", add(1, 6));
 import { Dep, effectWatch, reactivity, createApp } from "./core/main";
 import App from "./App";
 /**

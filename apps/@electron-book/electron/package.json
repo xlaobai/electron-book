@@ -1,5 +1,5 @@
 {
-  "name": "electron-book",
+  "name": "@electron-book/electron",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -9,24 +9,23 @@
     "rebuild": "electron-rebuild -f -w better-sqlite3",
     "test": "jest"
   },
+  "dependencies": {
+    "@mini-vue/reactivity": "workspace:^1.0.0"
+  },
   "devDependencies": {
-    "@babel/core": "^7.20.2",
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-typescript": "^7.18.6",
-    "@vitejs/plugin-vue": "^3.0.0",
+    "@vitejs/plugin-vue": "^3.2.0",
     "better-sqlite3": "^7.6.2",
-    "electron": "^19.0.8",
+    "electron": "^21.2.3",
     "electron-builder": "^23.6.0",
     "electron-rebuild": "^3.2.9",
     "keyv": "^4.5.2",
     "knex": "^2.3.0",
     "pinia": "^2.0.23",
-    "sass": "^1.56.0",
-    "typescript": "^4.6.4",
-    "vite": "^3.0.0",
-    "vite-plugin-optimizer": "^1.4.0",
-    "vue": "^3.2.37",
+    "sass": "^1.56.1",
+    "vite": "^3.2.4",
+    "vite-plugin-optimizer": "^1.4.2",
+    "vue": "^3.2.45",
     "vue-router": "^4.1.6",
-    "vue-tsc": "^0.38.4"
+    "vue-tsc": "^1.0.9"
   }
 }
