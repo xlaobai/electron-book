@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "electron:serve": "pnpm -C ./apps/@electron-book/electron/ dev",
-    "test": "jest"
+    "test": "jest ./packages/*"
   },
   "devDependencies": {
     "@babel/core": "7.20.2",
