@@ -1,4 +1,4 @@
-import { readonly, isReadonly } from "../src/index";
+import { readonly, isReadonly, isProxy } from "../src/index";
 
 describe("readonly", () => {
     it("happy path", () => {
