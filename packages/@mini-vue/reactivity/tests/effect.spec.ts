@@ -1,4 +1,4 @@
-import { reactive, effect } from "../src/index";
+import { reactive, effect, stop } from "../src/index";
 
 describe("effect", () => {
     it("happy path", () => {
@@ -56,7 +56,7 @@ describe("effect", () => {
         expect(dummy).toBe(2);
     })
 
-    it.skip("stop", () => {
+    it("stop", () => {
         // stop 把收集的依赖进行剔除，后续set不触发变化
         let dummy;
         const obj = reactive({ prop: 1 });
@@ -69,11 +69,11 @@ describe("effect", () => {
         obj.prop++;
         expect(dummy).toBe(2);
 
-        runner();
-        expect(dummy).toBe(3);
+        // runner();
+        // expect(dummy).toBe(3);
     })
 
-    it.skip("onStop", () => {
+    it("onStop", () => {
         const obj = reactive({
             foo: 1,
         });

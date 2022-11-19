@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "rollup": "^3.3.0"
+  },
+  "dependencies": {
+    "@mini-vue/shared": "workspace:^1.0.0"
   }
 }
