@@ -3,7 +3,7 @@ import { extend } from "@mini-vue/shared";
 let activeEffect:any;
 let shouldTrack = false;
 
-class ReactiveEffect{
+export class ReactiveEffect{
     _fn;
     _scheduler;
     deps = [];
