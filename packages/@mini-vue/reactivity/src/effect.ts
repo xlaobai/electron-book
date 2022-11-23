@@ -1,17 +1,40 @@
+import { extend } from "@mini-vue/shared";
+
 let activeEffect:any;
-class ReactiveEffect{
+let shouldTrack = false;
+
+export class ReactiveEffect{
     _fn;
     _scheduler;
-    stopActive = true;
     deps = [];
+    active = true;
+    onStop?:() => void;
     constructor(fn: Function, public scheduler?: any) {
         this._fn = fn;
         this._scheduler = scheduler;
     }
 
     run() {
+        if(!this.active) {
+            return  this._fn();
+        }
+
+        shouldTrack = true;
         activeEffect = this;
-        return this._fn();
+
+        const result = this._fn();
+        shouldTrack = false;
+        return result;
+    }
+
+    stop() {
+        if(this.active) {
+            cleanupEffect(this);
+            if(this.onStop) {
+                this.onStop();
+            }
+            this.active = false;
+        }
     }
 
     stop() {
@@ -23,8 +46,17 @@ class ReactiveEffect{
     }
 }
 
+export function cleanupEffect(effect: any) {
+    effect.deps.forEach((dep: any) => {
+        dep.delete(effect);
+    });
+    effect.deps.length = 0;
+}
+
 const targetMap = new Map();
 export function track(target: any, key: any) {
+    if(!isTracking()) return;
+
     let depsMap = targetMap.get(target);
     if(!depsMap) {
         depsMap = new Map();
@@ -36,13 +68,18 @@ export function track(target: any, key: any) {
         dep = new Set();
         depsMap.set(key, dep);
     }
+
+    trackEffects(dep);
+}
+
+export function trackEffects(dep: any) {
+    if(dep.has(activeEffect)) return;
+    
     dep.add(activeEffect);
     activeEffect.deps.push(dep);
 }
 
-export function trigger(target: any, key: any) {
-    const depsMap = targetMap.get(target);
-    const dep = depsMap.get(key);
+export function triggerEffects(dep: any) {
     for (const effect of dep) {
         if(effect.scheduler) {
             effect.scheduler();
@@ -52,22 +89,28 @@ export function trigger(target: any, key: any) {
     }
 }
 
+export function isTracking() {
+    return shouldTrack && activeEffect !== undefined;
+}
+
+export function trigger(target: any, key: any) {
+    const depsMap = targetMap.get(target);
+    const dep = depsMap.get(key);
+    triggerEffects(dep);
+}
+
 export function effect(fn: Function, options: any = {}) {
     const _effect = new ReactiveEffect(fn, options.scheduler);
+
+    extend(_effect, options);
+
     _effect.run();
 
     const runner: any = _effect.run.bind(_effect);
-    runner.effect = _effect;
+    runner.effect = _effect
     return runner;
 }
 
-export function stop(runner: any) {
-    return runner.effect.stop();
-}
-
-export function cleanupEffect(effect: ReactiveEffect) {
-    effect.deps.forEach((dep: Set<ReactiveEffect>) => {
-        dep.delete(effect);
-    })
-    effect.deps.length = 0;
+export function stop(runner:any) {
+    runner.effect.stop();
 }

@@ -57,7 +57,10 @@ importers:
 
   packages/@mini-vue/reactivity:
     specifiers:
+      '@mini-vue/shared': workspace:^1.0.0
       rollup: ^3.3.0
+    dependencies:
+      '@mini-vue/shared': link:../shared
     devDependencies:
       rollup: registry.npmmirror.com/rollup/3.3.0
 
