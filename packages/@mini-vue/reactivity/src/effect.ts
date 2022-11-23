@@ -2,6 +2,8 @@ let activeEffect:any;
 class ReactiveEffect{
     _fn;
     _scheduler;
+    stopActive = true;
+    deps = [];
     constructor(fn: Function, public scheduler?: any) {
         this._fn = fn;
         this._scheduler = scheduler;
@@ -10,6 +12,14 @@ class ReactiveEffect{
     run() {
         activeEffect = this;
         return this._fn();
+    }
+
+    stop() {
+        if(this.stopActive) {
+            // 清楚依赖
+            cleanupEffect(this);
+            this.stopActive = false;
+        }
     }
 }
 
@@ -27,6 +37,7 @@ export function track(target: any, key: any) {
         depsMap.set(key, dep);
     }
     dep.add(activeEffect);
+    activeEffect.deps.push(dep);
 }
 
 export function trigger(target: any, key: any) {
@@ -45,7 +56,18 @@ export function effect(fn: Function, options: any = {}) {
     const _effect = new ReactiveEffect(fn, options.scheduler);
     _effect.run();
 
-    const runner = _effect.run.bind(_effect);
-
+    const runner: any = _effect.run.bind(_effect);
+    runner.effect = _effect;
     return runner;
+}
+
+export function stop(runner: any) {
+    return runner.effect.stop();
+}
+
+export function cleanupEffect(effect: ReactiveEffect) {
+    effect.deps.forEach((dep: Set<ReactiveEffect>) => {
+        dep.delete(effect);
+    })
+    effect.deps.length = 0;
 }
