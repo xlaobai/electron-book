@@ -7,17 +7,25 @@ importers:
       '@babel/core': 7.20.2
       '@babel/preset-env': ^7.20.2
       '@babel/preset-typescript': ^7.18.6
+      '@rollup/plugin-commonjs': ^23.0.2
+      '@rollup/plugin-typescript': ^9.0.2
       '@types/jest': ^29.2.3
       father-build: ^1.22.5
       jest: ^29.3.1
+      rollup: ^3.3.0
+      tslib: ^2.4.1
       typescript: ^4.8.4
     devDependencies:
       '@babel/core': registry.npmmirror.com/@babel/core/7.20.2
       '@babel/preset-env': registry.npmmirror.com/@babel/preset-env/7.20.2_@babel+core@7.20.2
       '@babel/preset-typescript': registry.npmmirror.com/@babel/preset-typescript/7.18.6_@babel+core@7.20.2
+      '@rollup/plugin-commonjs': registry.npmmirror.com/@rollup/plugin-commonjs/23.0.2_rollup@3.3.0
+      '@rollup/plugin-typescript': registry.npmmirror.com/@rollup/plugin-typescript/9.0.2_uxzoppybjjm3iv3alceonunahm
       '@types/jest': registry.npmmirror.com/@types/jest/29.2.3
       father-build: registry.npmmirror.com/father-build/1.22.5
       jest: registry.npmmirror.com/jest/29.3.1
+      rollup: registry.npmmirror.com/rollup/3.3.0
+      tslib: registry.npmmirror.com/tslib/2.4.1
       typescript: registry.npmmirror.com/typescript/4.8.4
 
   apps/@electron-book/electron:
@@ -58,11 +66,14 @@ importers:
   packages/@mini-vue/reactivity:
     specifiers:
       '@mini-vue/shared': workspace:^1.0.0
-      rollup: ^3.3.0
     dependencies:
       '@mini-vue/shared': link:../shared
-    devDependencies:
-      rollup: registry.npmmirror.com/rollup/3.3.0
+
+  packages/@mini-vue/runtime-core:
+    specifiers: {}
+
+  packages/@mini-vue/shared:
+    specifiers: {}
 
 packages:
 
@@ -3541,6 +3552,27 @@ packages:
       rollup: registry.npmmirror.com/rollup/2.33.3
     dev: true
 
+  registry.npmmirror.com/@rollup/plugin-commonjs/23.0.2_rollup@3.3.0:
+    resolution: {integrity: sha512-e9ThuiRf93YlVxc4qNIurvv+Hp9dnD+4PjOqQs5vAYfcZ3+AXSrcdzXnVjWxcGQOa6KGJFcRZyUI3ktWLavFjg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@rollup/plugin-commonjs/-/plugin-commonjs-23.0.2.tgz}
+    id: registry.npmmirror.com/@rollup/plugin-commonjs/23.0.2
+    name: '@rollup/plugin-commonjs'
+    version: 23.0.2
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.68.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': registry.npmmirror.com/@rollup/pluginutils/5.0.2_rollup@3.3.0
+      commondir: registry.npmmirror.com/commondir/1.0.1
+      estree-walker: registry.npmmirror.com/estree-walker/2.0.2
+      glob: registry.npmmirror.com/glob/8.0.3
+      is-reference: registry.npmmirror.com/is-reference/1.2.1
+      magic-string: registry.npmmirror.com/magic-string/0.26.7
+      rollup: registry.npmmirror.com/rollup/3.3.0
+    dev: true
+
   registry.npmmirror.com/@rollup/plugin-inject/4.0.2_rollup@2.33.3:
     resolution: {integrity: sha512-TSLMA8waJ7Dmgmoc8JfPnwUwVZgLjjIAM6MqeIFqPO2ODK36JqE0Cf2F54UTgCUuW8da93Mvoj75a6KAVWgylw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@rollup/plugin-inject/-/plugin-inject-4.0.2.tgz}
     id: registry.npmmirror.com/@rollup/plugin-inject/4.0.2
@@ -3598,6 +3630,29 @@ packages:
       rollup: registry.npmmirror.com/rollup/2.33.3
     dev: true
 
+  registry.npmmirror.com/@rollup/plugin-typescript/9.0.2_uxzoppybjjm3iv3alceonunahm:
+    resolution: {integrity: sha512-/sS93vmHUMjzDUsl5scNQr1mUlNE1QjBBvOhmRwJCH8k2RRhDIm3c977B3wdu3t3Ap17W6dDeXP3hj1P1Un1bA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@rollup/plugin-typescript/-/plugin-typescript-9.0.2.tgz}
+    id: registry.npmmirror.com/@rollup/plugin-typescript/9.0.2
+    name: '@rollup/plugin-typescript'
+    version: 9.0.2
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^2.14.0||^3.0.0
+      tslib: '*'
+      typescript: '>=3.7.0'
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+      tslib:
+        optional: true
+    dependencies:
+      '@rollup/pluginutils': registry.npmmirror.com/@rollup/pluginutils/5.0.2_rollup@3.3.0
+      resolve: registry.npmmirror.com/resolve/1.22.1
+      rollup: registry.npmmirror.com/rollup/3.3.0
+      tslib: registry.npmmirror.com/tslib/2.4.1
+      typescript: registry.npmmirror.com/typescript/4.8.4
+    dev: true
+
   registry.npmmirror.com/@rollup/plugin-url/5.0.1_rollup@2.33.3:
     resolution: {integrity: sha512-/dO8Ic+vR9VtMkHjmFBWzISjX0iDwrB3vLg8sy4A7hxu2Uk0J09kAXbtku7gJb1fqVcJUIByFG5d/4sgNh1DvA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@rollup/plugin-url/-/plugin-url-5.0.1.tgz}
     id: registry.npmmirror.com/@rollup/plugin-url/5.0.1
@@ -3636,6 +3691,24 @@ packages:
     dependencies:
       estree-walker: registry.npmmirror.com/estree-walker/2.0.2
       picomatch: registry.npmmirror.com/picomatch/2.3.1
+    dev: true
+
+  registry.npmmirror.com/@rollup/pluginutils/5.0.2_rollup@3.3.0:
+    resolution: {integrity: sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@rollup/pluginutils/-/pluginutils-5.0.2.tgz}
+    id: registry.npmmirror.com/@rollup/pluginutils/5.0.2
+    name: '@rollup/pluginutils'
+    version: 5.0.2
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@types/estree': registry.npmmirror.com/@types/estree/1.0.0
+      estree-walker: registry.npmmirror.com/estree-walker/2.0.2
+      picomatch: registry.npmmirror.com/picomatch/2.3.1
+      rollup: registry.npmmirror.com/rollup/3.3.0
     dev: true
 
   registry.npmmirror.com/@sinclair/typebox/0.24.51:
@@ -9919,6 +9992,15 @@ packages:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/magic-string/-/magic-string-0.25.9.tgz}
     name: magic-string
     version: 0.25.9
+    dependencies:
+      sourcemap-codec: registry.npmmirror.com/sourcemap-codec/1.4.8
+    dev: true
+
+  registry.npmmirror.com/magic-string/0.26.7:
+    resolution: {integrity: sha512-hX9XH3ziStPoPhJxLq1syWuZMxbDvGNbVchfrdCtanC7D13888bMFow61x8axrx+GfHLtVeAx2kxL7tTGRl+Ow==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/magic-string/-/magic-string-0.26.7.tgz}
+    name: magic-string
+    version: 0.26.7
+    engines: {node: '>=12'}
     dependencies:
       sourcemap-codec: registry.npmmirror.com/sourcemap-codec/1.4.8
     dev: true

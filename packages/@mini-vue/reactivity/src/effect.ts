@@ -36,14 +36,6 @@ export class ReactiveEffect{
             this.active = false;
         }
     }
-
-    stop() {
-        if(this.stopActive) {
-            // 清楚依赖
-            cleanupEffect(this);
-            this.stopActive = false;
-        }
-    }
 }
 
 export function cleanupEffect(effect: any) {

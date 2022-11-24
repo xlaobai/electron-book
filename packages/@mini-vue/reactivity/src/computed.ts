@@ -7,6 +7,7 @@ class ComputedRefImpl {
     private _effect: any;
     constructor(getter: any) {
         this._getter = getter;
+        console.log(this._getter);
         this._effect = new ReactiveEffect(getter, () => {
             if(!this._dirty) {
                 this._dirty = true;
