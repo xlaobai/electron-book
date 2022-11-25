@@ -10,7 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@mini-vue/reactivity": "workspace:^1.0.0"
+    "@mini-vue/reactivity": "workspace:^1.0.0",
+    "@mini-vue/runtime-core": "workspace:^1.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.2.0",

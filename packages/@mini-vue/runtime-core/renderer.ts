@@ -1,12 +1,12 @@
 import { createComponentInstance, setupComponent } from "./component";
 
 export function render(vNode, container) {
-    //  patch
-
     patch(vNode, container);
 }
 
 function patch(vNode, container) {
+    //  TODO::判断vNode是不是一个element
+    //  processElement();
     processComponent(vNode, container);
 }
 

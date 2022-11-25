@@ -1,6 +1,8 @@
-import App from "./App";
+import { App } from "./App";
+import { createApp } from "@mini-vue/runtime-core";
 
 /**
  * mini-vue
  */
-createApp(App).mount("#app");
+const rootContainer = document.querySelector("#app");
+createApp(App).mount(rootContainer);
