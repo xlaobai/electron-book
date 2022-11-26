@@ -2,11 +2,22 @@
   "name": "@mini-vue/runtime-core",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "lib/runtime-core.cjs.js",
+  "module": "lib/runtime-core.esm.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c rollup.config.js --bundleConfigAsCjs",
+    "watch": "rollup -c rollup.config.js --bundleConfigAsCjs --watch"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@mini-vue/shared": "workspace:^1.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-typescript": "^9.0.2",
+    "rollup": "^3.3.0",
+    "typescript": "^4.8.4"
+  }
 }

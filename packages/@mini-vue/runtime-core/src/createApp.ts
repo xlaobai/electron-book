@@ -7,7 +7,7 @@ export function createApp(rootComponent) {
             // 先vNode
             // component -》vNode
             // 所有的操作都基于虚拟节点
-            const vNode = createVNode(rootContainer);
+            const vNode = createVNode(rootComponent);
 
             render(vNode, rootContainer);
         }
