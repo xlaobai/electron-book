@@ -1,5 +1,6 @@
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 import { initProps } from "./componentProps";
+import { initSlots } from "./componentSlots";
 import { emit } from "./componentEmit";
 import { shallowReadonly } from "@mini-vue/reactivity";
 
@@ -9,6 +10,7 @@ export function createComponentInstance(vNode: any) {
         type: vNode.type,
         setupState: {},
         props: {},
+        slots: {},
         emit: ()=>{},
         render: ()=>{}
     }
@@ -21,7 +23,7 @@ export function createComponentInstance(vNode: any) {
 export function setupComponent(instance) {
     // TODO
     initProps(instance, instance.vNode.props);
-    // initSlots()
+    initSlots(instance, instance.vNode.children);
 
     setupStatefulComponent(instance);
 }

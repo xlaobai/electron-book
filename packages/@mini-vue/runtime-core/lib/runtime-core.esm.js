@@ -1,3 +1,10 @@
+var hasOwn = function (obj, key) { return Object.prototype.hasOwnProperty.call(obj, key); };
+var isObject$1 = function (val) {
+    return val !== null && typeof val === "object";
+};
+var hasOwn_1 = hasOwn;
+var isObject_1$1 = isObject$1;
+
 function createVNode(type, props, children) {
     var vNode = {
         type: type,
@@ -6,12 +13,19 @@ function createVNode(type, props, children) {
         shapeFlags: getShapeFlags(type),
         el: null
     };
-    // children
+    // string + children
     if (typeof children === "string") {
         vNode.shapeFlags = vNode.shapeFlags | 4 /* ShapeFlags.TEXT_CHILDREN */;
     }
+    // array + children
     if (Array.isArray(children)) {
         vNode.shapeFlags = vNode.shapeFlags | 8 /* ShapeFlags.ARRAY_CHILDREN */;
+    }
+    // 组件 + object children
+    if (vNode.shapeFlags & 2 /* ShapeFlags.STATEFUL_COMPONENT */) {
+        if (isObject_1$1(children)) {
+            vNode.shapeFlags = vNode.shapeFlags | 16 /* ShapeFlags.SLOT_CHILDREN */;
+        }
     }
     return vNode;
 }
@@ -19,11 +33,9 @@ function getShapeFlags(type) {
     return typeof type === "string" ? 1 /* ShapeFlags.ELEMENT */ : 2 /* ShapeFlags.STATEFUL_COMPONENT */;
 }
 
-var hasOwn = function (obj, key) { return Object.prototype.hasOwnProperty.call(obj, key); };
-var hasOwn_1 = hasOwn;
-
 var publicPropertiesMap = {
-    $el: function (i) { return i.vNode.el; }
+    $el: function (i) { return i.vNode.el; },
+    $slots: function (i) { return i.slots; },
 };
 var PublicInstanceProxyHandlers = {
     get: function (_a, key) {
@@ -44,6 +56,27 @@ var PublicInstanceProxyHandlers = {
 
 function initProps(instance, rawProps) {
     instance.props = rawProps;
+}
+
+function initSlots(instance, children) {
+    var vNode = instance.vNode;
+    if (vNode.shapeFlags & 16 /* ShapeFlags.SLOT_CHILDREN */) {
+        normalizeObjectSlots(children, instance.slots);
+    }
+}
+function normalizeObjectSlots(children, slots) {
+    console.log("children", children);
+    var _loop_1 = function (key) {
+        var slot = children[key];
+        slots[key] = function (props) { return normalizeSlotValue(slot(props)); };
+    };
+    for (var key in children) {
+        _loop_1(key);
+    }
+    console.log("slots", slots);
+}
+function normalizeSlotValue(value) {
+    return Array.isArray(value) ? value : [value];
 }
 
 function emit(instance, event) {
@@ -163,6 +196,7 @@ function createComponentInstance(vNode) {
         type: vNode.type,
         setupState: {},
         props: {},
+        slots: {},
         emit: function () { },
         render: function () { }
     };
@@ -172,7 +206,7 @@ function createComponentInstance(vNode) {
 function setupComponent(instance) {
     // TODO
     initProps(instance, instance.vNode.props);
-    // initSlots()
+    initSlots(instance, instance.vNode.children);
     setupStatefulComponent(instance);
 }
 // 让组件拥有状态
@@ -279,4 +313,14 @@ function h(type, props, children) {
     return createVNode(type, props, children);
 }
 
-export { createApp, h };
+function renderSlots(slots, name, props) {
+    var slot = slots[name];
+    if (slot) {
+        if (typeof slot === "function") {
+            return createVNode('div', {}, slot(props));
+        }
+    }
+    return {};
+}
+
+export { createApp, h, renderSlots };

@@ -3,6 +3,7 @@ export declare function createComponentInstance(vNode: any): {
     type: any;
     setupState: {};
     props: {};
+    slots: {};
     emit: () => void;
     render: () => void;
 };

@@ -1,28 +1,15 @@
-import { h } from "@mini-vue/runtime-core";
+import { h, renderSlots } from "@mini-vue/runtime-core";
 
 export const Foo = {
     name: "Foo",
-    setup(props: any, { emit }: any) {
-        console.log("props", props);
-
-        const emitAdd = () => {
-            emit("add", 1, 2);
-            emit("add-foo", 1, 2);
-        }
-
-        return {
-            emitAdd
-        };
+    setup() {
+        return {}
     },
     render() {
-        const btn = h(
-            "button",
-            {
-                onClick: this.emitAdd
-            },
-            "emitAdd"
-        );
-        const foo = h("p", {}, "foo");
-        return h("div", {}, [btn, foo]);
+        const foo = h("p", {}, "foo")
+        const age = 26;
+        return h("div", {}, [renderSlots(this.$slots, "header", {
+            age
+        }), foo, renderSlots(this.$slots, "footer")]);
     }
 }

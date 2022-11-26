@@ -1,6 +1,7 @@
 import { reactivity, h } from "./core/main";
 declare const window:Window & {obj:any, h:any}
 
+// 预习课测试模板
 export default {
     // ui
     render(context: any) {
