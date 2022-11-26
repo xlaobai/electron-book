@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mini-vue/reactivity": "workspace:^1.0.0",
     "@mini-vue/shared": "workspace:^1.0.0"
   },
   "devDependencies": {

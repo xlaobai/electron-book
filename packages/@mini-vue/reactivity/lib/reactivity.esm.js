@@ -161,6 +161,10 @@ function shallowReadonly(original) {
     return createActiveObject(original, shallowReadonlyHandlers);
 }
 function createActiveObject(raw, baseHandlers) {
+    if (!isObject_1(raw)) {
+        console.warn("target ".concat(raw, " \u5FC5\u987B\u662F\u4E2A\u5BF9\u8C61"));
+        return;
+    }
     return new Proxy(raw, baseHandlers);
 }
 function isReactive(value) {

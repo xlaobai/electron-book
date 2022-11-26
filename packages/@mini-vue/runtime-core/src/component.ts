@@ -1,19 +1,26 @@
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
+import { initProps } from "./componentProps";
+import { emit } from "./componentEmit";
+import { shallowReadonly } from "@mini-vue/reactivity";
 
 export function createComponentInstance(vNode: any) {
     const component = {
         vNode,
         type: vNode.type,
         setupState: {},
+        props: {},
+        emit: ()=>{},
         render: ()=>{}
     }
+
+    component.emit = emit.bind(null, component) as any;
 
     return component;
 }
 
 export function setupComponent(instance) {
     // TODO
-    // initProps()
+    initProps(instance, instance.vNode.props);
     // initSlots()
 
     setupStatefulComponent(instance);
@@ -28,7 +35,9 @@ function setupStatefulComponent(instance: any) {
     const { setup } = Component;
 
     if(setup) {
-        const setupResult = setup();
+        const setupResult = setup(shallowReadonly(instance.props), {
+            emit: instance.emit
+        });
 
         handleSetupResult(instance, setupResult);
     }

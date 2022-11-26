@@ -1,3 +1,7 @@
+export { ShapeFlags } from "./ShapeFlags";
+
+export const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+
 export const extend = Object.assign;
 
 export const isObject = (val: any) => {

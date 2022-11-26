@@ -1,14 +1,16 @@
 import { createComponentInstance, setupComponent } from "./component";
+import { ShapeFlags } from "@mini-vue/shared/lib/ShapeFlags";
 
 export function render(vNode, container) {
     patch(vNode, container);
 }
 
 function patch(vNode, container) {
-    //  TODO::判断vNode是不是一个element
-    if(typeof vNode.type === "string") {
+    const { shapeFlags } = vNode;
+
+    if(shapeFlags & ShapeFlags.ELEMENT) {
         processElement(vNode, container);
-    } else {
+    } else if(shapeFlags & ShapeFlags.STATEFUL_COMPONENT){
         processComponent(vNode, container);
     }
 }
@@ -24,19 +26,25 @@ function processComponent(vNode: any, container: any) {
 function mountElement(vNode: any, container: any) {
     const el = (vNode.el = document.createElement(vNode.type));
 
-    const { children, props } = vNode;
+    const { children, props, shapeFlags } = vNode;
 
     // 设置子节点
-    if(typeof children === "string") {
+    if(shapeFlags & ShapeFlags.TEXT_CHILDREN) {
         el.textContent = children;
-    } else if(Array.isArray(children)){
+    } else if(shapeFlags & ShapeFlags.ARRAY_CHILDREN){
         mountChildren(children, el);
     }
 
     // 设置属性
     for (const key in props) {
         const val = props[key];
-        el.setAttribute(key, val);
+        const isOn = (key: string) => /^on[A-Z]/.test(key);
+        if(isOn(key)) {
+            const eventName = key.slice(2).toLocaleLowerCase();
+            el.addEventListener(eventName, val);
+        } else {
+            el.setAttribute(key, val);
+        }
     }
 
     container.append(el);

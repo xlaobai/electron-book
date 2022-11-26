@@ -1,4 +1,5 @@
 import { mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from "./baseHandlers";
+import { isObject } from "@mini-vue/shared";
 
 export const enum ReactiveFlags {
     IS_REACTIVE = "__v_isReactive",
@@ -18,6 +19,10 @@ export function shallowReadonly(original: any) {
 }
 
 function createActiveObject(raw: any, baseHandlers: any) {
+    if(!isObject(raw)) {
+        console.warn(`target ${raw} 必须是个对象`);
+        return;
+    }
     return new Proxy(raw, baseHandlers);
 }
 

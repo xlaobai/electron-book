@@ -1,3 +1,5 @@
+export { ShapeFlags } from "./ShapeFlags";
+export declare const hasOwn: (obj: any, key: any) => boolean;
 export declare const extend: {
     <T extends {}, U>(target: T, source: U): T & U;
     <T_1 extends {}, U_1, V>(target: T_1, source1: U_1, source2: V): T_1 & U_1 & V;

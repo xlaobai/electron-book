@@ -3,10 +3,24 @@ function createVNode(type, props, children) {
         type: type,
         props: props,
         children: children,
+        shapeFlags: getShapeFlags(type),
         el: null
     };
+    // children
+    if (typeof children === "string") {
+        vNode.shapeFlags = vNode.shapeFlags | 4 /* ShapeFlags.TEXT_CHILDREN */;
+    }
+    if (Array.isArray(children)) {
+        vNode.shapeFlags = vNode.shapeFlags | 8 /* ShapeFlags.ARRAY_CHILDREN */;
+    }
     return vNode;
 }
+function getShapeFlags(type) {
+    return typeof type === "string" ? 1 /* ShapeFlags.ELEMENT */ : 2 /* ShapeFlags.STATEFUL_COMPONENT */;
+}
+
+var hasOwn = function (obj, key) { return Object.prototype.hasOwnProperty.call(obj, key); };
+var hasOwn_1 = hasOwn;
 
 var publicPropertiesMap = {
     $el: function (i) { return i.vNode.el; }
@@ -14,9 +28,12 @@ var publicPropertiesMap = {
 var PublicInstanceProxyHandlers = {
     get: function (_a, key) {
         var instance = _a._;
-        var setupState = instance.setupState;
-        if (key in setupState) {
+        var setupState = instance.setupState, props = instance.props;
+        if (hasOwn_1(setupState, key)) {
             return setupState[key];
+        }
+        else if (hasOwn_1(props, key)) {
+            return props[key];
         }
         var publicGetter = publicPropertiesMap[key];
         if (publicGetter) {
@@ -25,18 +42,136 @@ var PublicInstanceProxyHandlers = {
     }
 };
 
+function initProps(instance, rawProps) {
+    instance.props = rawProps;
+}
+
+function emit(instance, event) {
+    var args = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args[_i - 2] = arguments[_i];
+    }
+    var props = instance.props;
+    // TPP 先具体再抽象
+    var camelize = function (str) {
+        return str.replace(/-(\w)/g, function (_, c) {
+            return c ? c.toUpperCase() : '';
+        });
+    };
+    var capitalize = function (str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+    var handlerKey = function (str) {
+        return str ? "on" + capitalize(str) : "";
+    };
+    var handler = props[handlerKey(camelize(event))];
+    handler && handler.apply(void 0, args);
+}
+
+var extend = Object.assign;
+var isObject = function (val) {
+    return val !== null && typeof val === "object";
+};
+
+var extend_1 = extend;
+var isObject_1 = isObject;
+var targetMap = new Map();
+function triggerEffects(dep) {
+    for (var _i = 0, dep_1 = dep; _i < dep_1.length; _i++) {
+        var effect_1 = dep_1[_i];
+        if (effect_1.scheduler) {
+            effect_1.scheduler();
+        }
+        else {
+            effect_1.run();
+        }
+    }
+}
+function trigger(target, key) {
+    var depsMap = targetMap.get(target);
+    var dep = depsMap.get(key);
+    triggerEffects(dep);
+}
+
+var get = createGetter();
+var set = createSetter();
+var readonlyGet = createGetter(true);
+var shallowReadonlyGet = createGetter(true, true);
+function createGetter(isReadonly, isShallow) {
+    if (isReadonly === void 0) { isReadonly = false; }
+    if (isShallow === void 0) { isShallow = false; }
+    return function get(target, key) {
+        if (key === "__v_isReactive" /* ReactiveFlags.IS_REACTIVE */) {
+            return !isReadonly;
+        }
+        else if (key === "__v_isReadonly" /* ReactiveFlags.IS_READONLY */) {
+            return isReadonly;
+        }
+        var res = Reflect.get(target, key);
+        if (isShallow) {
+            return res;
+        }
+        if (isObject_1(res)) {
+            return isReadonly ? readonly(res) : reactive(res);
+        }
+        return res;
+    };
+}
+function createSetter() {
+    return function set(target, key, value) {
+        var res = Reflect.set(target, key, value);
+        trigger(target, key);
+        return res;
+    };
+}
+var mutableHandlers = {
+    get: get,
+    set: set
+};
+var readonlyHandlers = {
+    get: readonlyGet,
+    set: function (target, key, value) {
+        console.warn("key:".concat(key, " is set fail, because target is readonly"));
+        return true;
+    }
+};
+var shallowReadonlyHandlers = extend_1({}, readonlyHandlers, {
+    get: shallowReadonlyGet
+});
+
+function reactive(original) {
+    return createActiveObject(original, mutableHandlers);
+}
+function readonly(original) {
+    return createActiveObject(original, readonlyHandlers);
+}
+function shallowReadonly(original) {
+    return createActiveObject(original, shallowReadonlyHandlers);
+}
+function createActiveObject(raw, baseHandlers) {
+    if (!isObject_1(raw)) {
+        console.warn("target ".concat(raw, " \u5FC5\u987B\u662F\u4E2A\u5BF9\u8C61"));
+        return;
+    }
+    return new Proxy(raw, baseHandlers);
+}
+var shallowReadonly_1 = shallowReadonly;
+
 function createComponentInstance(vNode) {
     var component = {
         vNode: vNode,
         type: vNode.type,
         setupState: {},
+        props: {},
+        emit: function () { },
         render: function () { }
     };
+    component.emit = emit.bind(null, component);
     return component;
 }
 function setupComponent(instance) {
     // TODO
-    // initProps()
+    initProps(instance, instance.vNode.props);
     // initSlots()
     setupStatefulComponent(instance);
 }
@@ -46,7 +181,9 @@ function setupStatefulComponent(instance) {
     instance.proxy = new Proxy({ _: instance }, PublicInstanceProxyHandlers);
     var setup = Component.setup;
     if (setup) {
-        var setupResult = setup();
+        var setupResult = setup(shallowReadonly_1(instance.props), {
+            emit: instance.emit
+        });
         handleSetupResult(instance, setupResult);
     }
 }
@@ -66,11 +203,11 @@ function render(vNode, container) {
     patch(vNode, container);
 }
 function patch(vNode, container) {
-    //  TODO::判断vNode是不是一个element
-    if (typeof vNode.type === "string") {
+    var shapeFlags = vNode.shapeFlags;
+    if (shapeFlags & 1 /* ShapeFlags.ELEMENT */) {
         processElement(vNode, container);
     }
-    else {
+    else if (shapeFlags & 2 /* ShapeFlags.STATEFUL_COMPONENT */) {
         processComponent(vNode, container);
     }
 }
@@ -82,18 +219,25 @@ function processComponent(vNode, container) {
 }
 function mountElement(vNode, container) {
     var el = (vNode.el = document.createElement(vNode.type));
-    var children = vNode.children, props = vNode.props;
+    var children = vNode.children, props = vNode.props, shapeFlags = vNode.shapeFlags;
     // 设置子节点
-    if (typeof children === "string") {
+    if (shapeFlags & 4 /* ShapeFlags.TEXT_CHILDREN */) {
         el.textContent = children;
     }
-    else if (Array.isArray(children)) {
+    else if (shapeFlags & 8 /* ShapeFlags.ARRAY_CHILDREN */) {
         mountChildren(children, el);
     }
     // 设置属性
     for (var key in props) {
         var val = props[key];
-        el.setAttribute(key, val);
+        var isOn = function (key) { return /^on[A-Z]/.test(key); };
+        if (isOn(key)) {
+            var eventName = key.slice(2).toLocaleLowerCase();
+            el.addEventListener(eventName, val);
+        }
+        else {
+            el.setAttribute(key, val);
+        }
     }
     container.append(el);
 }
