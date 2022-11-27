@@ -1,0 +1,20 @@
+import { h, getCurrentInstance, createTextVNode } from "@mini-vue/runtime-core";
+import { Foo } from "./Foo";
+
+// vue3.0 component Fragment & Text & getCurrentInstance
+// 以上视频测试模板
+export const App = {
+    name: "APP",
+    setup() {
+        const instance = getCurrentInstance();
+        console.log("APP", instance);
+    },
+    render() {
+        const app = h("div", {}, "App");
+        const foo = h(Foo, {}, {
+            header: ({ age }) => [h("p", {}, "header" + age), createTextVNode("hello world")], 
+            footer: () => h("p", {}, "footer")
+        });
+        return h("div", {}, [app, foo]);
+    }
+}

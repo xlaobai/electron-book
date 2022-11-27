@@ -1,9 +1,11 @@
-export declare function createComponentInstance(vNode: any): {
+export declare function createComponentInstance(vNode: any, parent: any): {
     vNode: any;
     type: any;
     setupState: {};
     props: {};
     slots: {};
+    provides: any;
+    parent: any;
     emit: () => void;
     render: () => void;
 };

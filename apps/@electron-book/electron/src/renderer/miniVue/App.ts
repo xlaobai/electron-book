@@ -1,18 +1,53 @@
-import { h, getCurrentInstance, createTextVNode } from "@mini-vue/runtime-core";
-import { Foo } from "./Foo";
+import { h, inject, provide } from "@mini-vue/runtime-core";
 
-export const App = {
-    name: "APP",
+const Provider = {
+    name: "Provider",
     setup() {
-        const instance = getCurrentInstance();
-        console.log("APP", instance);
+        provide("foo", "fooVal");
+        provide("bar", "barVal");
     },
     render() {
-        const app = h("div", {}, "App");
-        const foo = h(Foo, {}, {
-            header: ({ age }) => [h("p", {}, "header" + age), createTextVNode("hello world")], 
-            footer: () => h("p", {}, "footer")
-        });
-        return h("div", {}, [app, foo]);
+        return h("div", {}, [h("p", {}, "Provider"), h(ProviderTwo)]);
+    }
+}
+
+const ProviderTwo = {
+    name: "ProviderTwo",
+    setup() {
+        provide("foo", "fooTwo");
+        const foo = inject("foo");
+
+        return {
+            foo
+        }
+    },
+    render() {
+        return h("div", {}, [h("p", {}, `ProviderTwo foo:${this.foo}`), h(Consumer)]);
+    }
+}
+
+const Consumer = {
+    name: "Consumer",
+    setup() {
+        const foo = inject("foo");
+        const bar = inject("bar");
+        const baz = inject("baz", () => {return "bazDefault"});
+
+        return {
+            foo,
+            bar,
+            baz
+        }
+    },
+    render() {
+        return h("div", {}, `Consumer: -${this.foo} - ${this.bar} - ${this.baz}`);
+    }
+}
+
+export const App =  {
+    name: "APP",
+    setup(){},
+    render() {
+        return h("div", {}, [h("p", {}, "apiInject"), h(Provider)])
     }
 }

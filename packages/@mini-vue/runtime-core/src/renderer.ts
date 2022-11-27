@@ -3,24 +3,24 @@ import { ShapeFlags } from "@mini-vue/shared/lib/ShapeFlags";
 import { Fragment, Text } from "./vNode";
 
 export function render(vNode, container) {
-    patch(vNode, container);
+    patch(vNode, container, null);
 }
 
-function patch(vNode, container) {
+function patch(vNode, container, parentComponent) {
     const { shapeFlags, type } = vNode;
 
     switch (type) {
         case Fragment:
-            mountChildren(vNode.children, container);
+            mountChildren(vNode.children, container, parentComponent);
             break;
         case Text:
             processText(vNode, container);
             break;
         default:
             if(shapeFlags & ShapeFlags.ELEMENT) {
-                processElement(vNode, container);
+                processElement(vNode, container, parentComponent);
             } else if(shapeFlags & ShapeFlags.STATEFUL_COMPONENT){
-                processComponent(vNode, container);
+                processComponent(vNode, container, parentComponent);
             }
             break;
     }
@@ -33,15 +33,15 @@ function processText(vNode: any, container: any) {
     container.append(textNode);
 }
 
-function processElement(vNode: any, container: any) {
-    mountElement(vNode, container);
+function processElement(vNode: any, container: any, parentComponent) {
+    mountElement(vNode, container, parentComponent);
 }
 
-function processComponent(vNode: any, container: any) {
-    mountComponent(vNode, container);
+function processComponent(vNode: any, container: any, parentComponent) {
+    mountComponent(vNode, container, parentComponent);
 }
 
-function mountElement(vNode: any, container: any) {
+function mountElement(vNode: any, container: any, parentComponent) {
     const el = (vNode.el = document.createElement(vNode.type));
 
     const { children, props, shapeFlags } = vNode;
@@ -50,7 +50,7 @@ function mountElement(vNode: any, container: any) {
     if(shapeFlags & ShapeFlags.TEXT_CHILDREN) {
         el.textContent = children;
     } else if(shapeFlags & ShapeFlags.ARRAY_CHILDREN){
-        mountChildren(children, el);
+        mountChildren(children, el, parentComponent);
     }
 
     // 设置属性
@@ -68,15 +68,15 @@ function mountElement(vNode: any, container: any) {
     container.append(el);
 }
 
-function mountChildren(vNode: any, container: any) {
+function mountChildren(vNode: any, container: any, parentComponent) {
     vNode.forEach((v) => {
-        patch(v, container);
+        patch(v, container, parentComponent);
     })
 }
 
-function mountComponent(initialVNode: any, container: any) {
+function mountComponent(initialVNode: any, container: any, parentComponent) {
     // 获取组件实例
-    const instance = createComponentInstance(initialVNode);
+    const instance = createComponentInstance(initialVNode, parentComponent);
     // 生成有状态的组件实例
     setupComponent(instance);
     setupRenderEffect(instance, initialVNode, container);
@@ -88,7 +88,7 @@ function setupRenderEffect(instance: any, initialVNode: any, container: any) {
     const subTree = instance.render.call(proxy);
 
     // 渲染子树
-    patch(subTree, container);
+    patch(subTree, container, instance);
 
     // 把绑定子树的el节点绑定给组件实例的虚拟节点
     initialVNode.el = subTree.el;

@@ -1,5 +1,7 @@
 import { h, renderSlots, getCurrentInstance } from "@mini-vue/runtime-core";
 
+// vue3.0 component Fragment & Text & getCurrentInstance
+// 以上视频测试模板
 export const Foo = {
     name: "Foo",
     setup() {

@@ -4,13 +4,16 @@ import { initSlots } from "./componentSlots";
 import { emit } from "./componentEmit";
 import { shallowReadonly } from "@mini-vue/reactivity";
 
-export function createComponentInstance(vNode: any) {
+export function createComponentInstance(vNode: any, parent) {
+    console.log("createComponentInstance", parent);
     const component = {
         vNode,
         type: vNode.type,
         setupState: {},
         props: {},
         slots: {},
+        provides: parent ? parent.provides : {},
+        parent,
         emit: ()=>{},
         render: ()=>{}
     }

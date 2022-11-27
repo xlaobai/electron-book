@@ -196,13 +196,16 @@ function createActiveObject(raw, baseHandlers) {
 }
 var shallowReadonly_1 = shallowReadonly;
 
-function createComponentInstance(vNode) {
+function createComponentInstance(vNode, parent) {
+    console.log("createComponentInstance", parent);
     var component = {
         vNode: vNode,
         type: vNode.type,
         setupState: {},
         props: {},
         slots: {},
+        provides: parent ? parent.provides : {},
+        parent: parent,
         emit: function () { },
         render: function () { }
     };
@@ -249,23 +252,23 @@ function setCurrentInstance(instance) {
 }
 
 function render(vNode, container) {
-    patch(vNode, container);
+    patch(vNode, container, null);
 }
-function patch(vNode, container) {
+function patch(vNode, container, parentComponent) {
     var shapeFlags = vNode.shapeFlags, type = vNode.type;
     switch (type) {
         case Fragment:
-            mountChildren(vNode.children, container);
+            mountChildren(vNode.children, container, parentComponent);
             break;
         case Text:
             processText(vNode, container);
             break;
         default:
             if (shapeFlags & 1 /* ShapeFlags.ELEMENT */) {
-                processElement(vNode, container);
+                processElement(vNode, container, parentComponent);
             }
             else if (shapeFlags & 2 /* ShapeFlags.STATEFUL_COMPONENT */) {
-                processComponent(vNode, container);
+                processComponent(vNode, container, parentComponent);
             }
             break;
     }
@@ -276,13 +279,13 @@ function processText(vNode, container) {
     vNode.el = textNode;
     container.append(textNode);
 }
-function processElement(vNode, container) {
-    mountElement(vNode, container);
+function processElement(vNode, container, parentComponent) {
+    mountElement(vNode, container, parentComponent);
 }
-function processComponent(vNode, container) {
-    mountComponent(vNode, container);
+function processComponent(vNode, container, parentComponent) {
+    mountComponent(vNode, container, parentComponent);
 }
-function mountElement(vNode, container) {
+function mountElement(vNode, container, parentComponent) {
     var el = (vNode.el = document.createElement(vNode.type));
     var children = vNode.children, props = vNode.props, shapeFlags = vNode.shapeFlags;
     // 设置子节点
@@ -290,7 +293,7 @@ function mountElement(vNode, container) {
         el.textContent = children;
     }
     else if (shapeFlags & 8 /* ShapeFlags.ARRAY_CHILDREN */) {
-        mountChildren(children, el);
+        mountChildren(children, el, parentComponent);
     }
     // 设置属性
     for (var key in props) {
@@ -306,14 +309,14 @@ function mountElement(vNode, container) {
     }
     container.append(el);
 }
-function mountChildren(vNode, container) {
+function mountChildren(vNode, container, parentComponent) {
     vNode.forEach(function (v) {
-        patch(v, container);
+        patch(v, container, parentComponent);
     });
 }
-function mountComponent(initialVNode, container) {
+function mountComponent(initialVNode, container, parentComponent) {
     // 获取组件实例
-    var instance = createComponentInstance(initialVNode);
+    var instance = createComponentInstance(initialVNode, parentComponent);
     // 生成有状态的组件实例
     setupComponent(instance);
     setupRenderEffect(instance, initialVNode, container);
@@ -323,7 +326,7 @@ function setupRenderEffect(instance, initialVNode, container) {
     // 把有状态的组件实例通过 proxy 的方式与子树进行绑定
     var subTree = instance.render.call(proxy);
     // 渲染子树
-    patch(subTree, container);
+    patch(subTree, container, instance);
     // 把绑定子树的el节点绑定给组件实例的虚拟节点
     initialVNode.el = subTree.el;
 }
@@ -354,4 +357,34 @@ function renderSlots(slots, name, props) {
     return {};
 }
 
-export { createApp, createTextVNode, getCurrentInstance, h, renderSlots };
+function provide(key, value) {
+    // 存
+    var currentInstance = getCurrentInstance();
+    if (currentInstance) {
+        var provides = currentInstance.provides;
+        var parentProvides = currentInstance.parent.provides;
+        // TODO::了解init过程
+        if (provides === parentProvides) {
+            provides = currentInstance.provides = Object.create(parentProvides);
+        }
+        provides[key] = value;
+    }
+}
+function inject(key, defaultValue) {
+    // 取
+    var currentInstance = getCurrentInstance();
+    if (currentInstance) {
+        var parentProvides = currentInstance.parent.provides;
+        if (key in parentProvides) {
+            return parentProvides[key];
+        }
+        else {
+            if (typeof defaultValue === "function") {
+                return defaultValue();
+            }
+            return defaultValue;
+        }
+    }
+}
+
+export { createApp, createTextVNode, getCurrentInstance, h, inject, provide, renderSlots };
