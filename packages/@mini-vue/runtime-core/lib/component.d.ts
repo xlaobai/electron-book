@@ -8,3 +8,4 @@ export declare function createComponentInstance(vNode: any): {
     render: () => void;
 };
 export declare function setupComponent(instance: any): void;
+export declare function getCurrentInstance(): null;

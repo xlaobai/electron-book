@@ -1,18 +1,36 @@
 import { createComponentInstance, setupComponent } from "./component";
 import { ShapeFlags } from "@mini-vue/shared/lib/ShapeFlags";
+import { Fragment, Text } from "./vNode";
 
 export function render(vNode, container) {
     patch(vNode, container);
 }
 
 function patch(vNode, container) {
-    const { shapeFlags } = vNode;
+    const { shapeFlags, type } = vNode;
 
-    if(shapeFlags & ShapeFlags.ELEMENT) {
-        processElement(vNode, container);
-    } else if(shapeFlags & ShapeFlags.STATEFUL_COMPONENT){
-        processComponent(vNode, container);
+    switch (type) {
+        case Fragment:
+            mountChildren(vNode.children, container);
+            break;
+        case Text:
+            processText(vNode, container);
+            break;
+        default:
+            if(shapeFlags & ShapeFlags.ELEMENT) {
+                processElement(vNode, container);
+            } else if(shapeFlags & ShapeFlags.STATEFUL_COMPONENT){
+                processComponent(vNode, container);
+            }
+            break;
     }
+}
+
+function processText(vNode: any, container: any) {
+    const { children } = vNode;
+    const textNode = document.createTextNode(children);
+    vNode.el = textNode;
+    container.append(textNode);
 }
 
 function processElement(vNode: any, container: any) {

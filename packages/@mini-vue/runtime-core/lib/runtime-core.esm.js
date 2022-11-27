@@ -5,6 +5,9 @@ var isObject$1 = function (val) {
 var hasOwn_1 = hasOwn;
 var isObject_1$1 = isObject$1;
 
+// TODO::Symbol 语法
+var Fragment = Symbol("Fragment");
+var Text = Symbol("Text");
 function createVNode(type, props, children) {
     var vNode = {
         type: type,
@@ -28,6 +31,9 @@ function createVNode(type, props, children) {
         }
     }
     return vNode;
+}
+function createTextVNode(str) {
+    return createVNode(Text, {}, str);
 }
 function getShapeFlags(type) {
     return typeof type === "string" ? 1 /* ShapeFlags.ELEMENT */ : 2 /* ShapeFlags.STATEFUL_COMPONENT */;
@@ -215,9 +221,11 @@ function setupStatefulComponent(instance) {
     instance.proxy = new Proxy({ _: instance }, PublicInstanceProxyHandlers);
     var setup = Component.setup;
     if (setup) {
+        setCurrentInstance(instance);
         var setupResult = setup(shallowReadonly_1(instance.props), {
             emit: instance.emit
         });
+        setCurrentInstance(null);
         handleSetupResult(instance, setupResult);
     }
 }
@@ -232,18 +240,41 @@ function finishComponentSetup(instance) {
     var Component = instance.type;
     instance.render = Component.render;
 }
+var currentInstance = null;
+function getCurrentInstance() {
+    return currentInstance;
+}
+function setCurrentInstance(instance) {
+    currentInstance = instance;
+}
 
 function render(vNode, container) {
     patch(vNode, container);
 }
 function patch(vNode, container) {
-    var shapeFlags = vNode.shapeFlags;
-    if (shapeFlags & 1 /* ShapeFlags.ELEMENT */) {
-        processElement(vNode, container);
+    var shapeFlags = vNode.shapeFlags, type = vNode.type;
+    switch (type) {
+        case Fragment:
+            mountChildren(vNode.children, container);
+            break;
+        case Text:
+            processText(vNode, container);
+            break;
+        default:
+            if (shapeFlags & 1 /* ShapeFlags.ELEMENT */) {
+                processElement(vNode, container);
+            }
+            else if (shapeFlags & 2 /* ShapeFlags.STATEFUL_COMPONENT */) {
+                processComponent(vNode, container);
+            }
+            break;
     }
-    else if (shapeFlags & 2 /* ShapeFlags.STATEFUL_COMPONENT */) {
-        processComponent(vNode, container);
-    }
+}
+function processText(vNode, container) {
+    var children = vNode.children;
+    var textNode = document.createTextNode(children);
+    vNode.el = textNode;
+    container.append(textNode);
 }
 function processElement(vNode, container) {
     mountElement(vNode, container);
@@ -317,10 +348,10 @@ function renderSlots(slots, name, props) {
     var slot = slots[name];
     if (slot) {
         if (typeof slot === "function") {
-            return createVNode('div', {}, slot(props));
+            return createVNode(Fragment, {}, slot(props));
         }
     }
     return {};
 }
 
-export { createApp, h, renderSlots };
+export { createApp, createTextVNode, getCurrentInstance, h, renderSlots };

@@ -1,6 +1,10 @@
 import { ShapeFlags } from "@mini-vue/shared/lib/ShapeFlags";
 import { isObject } from "@mini-vue/shared";
 
+// TODO::Symbol 语法
+export const Fragment = Symbol("Fragment");
+export const Text = Symbol("Text");
+
 export function createVNode(type, props?, children?) {
     const vNode = {
         type,
@@ -28,6 +32,10 @@ export function createVNode(type, props?, children?) {
     }
 
     return vNode;
+}
+
+export function createTextVNode(str: string) {
+    return createVNode(Text, {}, str);
 }
 
 function getShapeFlags(type) {
