@@ -1,0 +1,23 @@
+{
+  "name": "@mini-vue/runtime-dom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/runtime-dom.cjs.js",
+  "module": "lib/runtime-dom.esm.js",
+  "scripts": {
+    "build": "npx rimraf ./lib && rollup -c rollup.config.js --bundleConfigAsCjs",
+    "watch": "npx rimraf ./lib && rollup -c rollup.config.js --bundleConfigAsCjs --watch"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.2",
+    "@rollup/plugin-typescript": "^9.0.2",
+    "rollup": "^3.3.0",
+    "typescript": "^4.8.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mini-vue/runtime-core": "workspace:^1.0.0"
+  }
+}
