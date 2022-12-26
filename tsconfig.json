@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "strict": true,
+    "rootDir": ".",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "target": "es2016",
+    "module": "esnext",
+    "noImplicitAny": false,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "downlevelIteration": true,
+    "lib": ["esnext", "DOM"],
+    "paths": {
+      "@guide-mini-vue/*": ["./packages/*/src"] //解决@guide-mini-vue前缀无法跳转问题
+    }
+  },
+  "include": ["packages/*/src", "packages/*/__tests__"] //把ts问题的规则限制在部分目录上
+}

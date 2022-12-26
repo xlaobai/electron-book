@@ -1,0 +1,14 @@
+{
+  "name": "@electron-book/electron",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "test": "jest"
+  },
+  "devDependencies": {
+  }
+}
