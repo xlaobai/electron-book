@@ -13,6 +13,7 @@
     "sourceMap": true,
     "downlevelIteration": true,
     "lib": ["esnext", "DOM"],
+    "types": ["vitest/globals"],  //解决TS引用vitest test等方法报错问题，vitest.config.ts文件为配置项
     "paths": {
       "@guide-mini-vue/*": ["./packages/*/src"] //解决@guide-mini-vue前缀无法跳转问题
     }

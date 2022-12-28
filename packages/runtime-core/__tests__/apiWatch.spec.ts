@@ -1,6 +1,6 @@
-import { reactive } from "../../reactivity";
-import { watchEffect } from "../apiWatch";
-import { nextTick } from "../scheduler";
+import { reactive } from "@guide-mini-vue/reactivity";
+import { watchEffect } from "../src/apiWatch";
+import { nextTick } from "../src/scheduler";
 import { vi } from "vitest";
 
 describe("api: watch", () => {

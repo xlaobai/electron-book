@@ -1,6 +1,6 @@
-import { effect } from "../effect";
-import { reactive } from "../reactive";
-import { isRef, ref, unRef, proxyRefs } from "../ref";
+import { effect } from "../src/effect";
+import { reactive } from "../src/reactive";
+import { isRef, ref, unRef, proxyRefs } from "../src/ref";
 describe("ref", () => {
   it("happy path", () => {
     const a = ref(1);

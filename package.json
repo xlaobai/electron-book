@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "electron:serve": "pnpm -C ./apps/@electron-book/electron/ dev",
-    "test": "jest ./packages/*"
+    "test": "jest ./packages/*",
+    "build": "rollup -c rollup.config.js"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^13.0.0",
