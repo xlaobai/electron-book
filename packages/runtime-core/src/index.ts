@@ -5,5 +5,6 @@ export { getCurrentInstance, registerRuntimeCompiler } from "./component";
 export { provide, inject } from "./apiInject";
 export { createRender } from "./render";
 export { nextTick } from "./scheduler";
-export { toDisplayString } from "../../utils/toDisplayString";
-export * from "../reactivity/index";
+export { Vnode } from "./types/index";
+export { toDisplayString, isEventName } from "@guide-mini-vue/shared";
+export * from "@guide-mini-vue/reactivity";

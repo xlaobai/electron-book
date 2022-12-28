@@ -29,10 +29,8 @@ importers:
 
   packages/compiler-core:
     specifiers:
-      '@guide-mini-vue/reactivity': workspace:^1.0.0
       '@guide-mini-vue/shared': workspace:^1.0.0
     dependencies:
-      '@guide-mini-vue/reactivity': link:../reactivity
       '@guide-mini-vue/shared': link:../shared
 
   packages/reactivity:
@@ -50,13 +48,21 @@ importers:
       '@guide-mini-vue/shared': link:../shared
 
   packages/runtime-dom:
-    specifiers: {}
+    specifiers:
+      '@guide-mini-vue/runtime-core': workspace:^1.0.0
+    dependencies:
+      '@guide-mini-vue/runtime-core': link:../runtime-core
 
   packages/shared:
     specifiers: {}
 
   packages/vue:
-    specifiers: {}
+    specifiers:
+      '@guide-mini-vue/compiler-core': workspace:^1.0.0
+      '@guide-mini-vue/runtime-dom': workspace:^1.0.0
+    dependencies:
+      '@guide-mini-vue/compiler-core': link:../compiler-core
+      '@guide-mini-vue/runtime-dom': link:../runtime-dom
 
 packages:
 

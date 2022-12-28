@@ -1,4 +1,4 @@
-import { hasQwnProperty } from "../../utils/index";
+import { hasQwnProperty } from "@guide-mini-vue/shared";
 import { Component } from "./types/index";
 
 // 公共属性值

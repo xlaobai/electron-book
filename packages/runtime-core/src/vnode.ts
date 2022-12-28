@@ -1,4 +1,4 @@
-import { ShapeFlags } from "../../utils/shapeFlags";
+import { ShapeFlags } from "@guide-mini-vue/shared";
 import { Vnode } from "./types/index";
 
 export const Fragment = Symbol("Fragment");
@@ -37,7 +37,7 @@ export function createVNode(type: any, props?: object, children?: any) {
     // 如果是组件类型&children是对象类型，则当作插槽处理
     if(vnode.shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
         if(typeof children === "object") {
-            vnode.shapeFlag |= ShapeFlags.SLOT_CHILDREN;
+            vnode.shapeFlag |= ShapeFlags.SLOTS_CHILDREN;
         }
     }
 

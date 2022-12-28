@@ -10,5 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@guide-mini-vue/shared": "workspace:^1.0.0"
   }
 }

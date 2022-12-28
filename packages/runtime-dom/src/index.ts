@@ -1,6 +1,4 @@
-import { createRender } from "../runtime-core/index"
-import { isEventName } from "../../utils/index";
-import { Vnode } from "../runtime-core/types/index";
+import { createRender, isEventName, Vnode } from "@guide-mini-vue/runtime-core"
 
 function createElement(type: string) {
     return document.createElement(type);
@@ -68,4 +66,4 @@ export function createApp(...args: any) {
     return render.createApp(args[0]);
 }
 
-export * from "../runtime-core/index";
+export * from "@guide-mini-vue/runtime-core";

@@ -1,5 +1,5 @@
 {
-  "name": "@mini-vue/runtime-dom",
+  "name": "@guide-mini-vue/runtime-dom",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,5 +8,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@guide-mini-vue/runtime-core": "workspace:^1.0.0"
+  }
 }

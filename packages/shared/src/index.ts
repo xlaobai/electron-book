@@ -53,3 +53,34 @@ const hyphenateRE = /\B([A-Z])/g;
  */
 export const hyphenate = (str: string) =>
   str.replace(hyphenateRE, "-$1").toLowerCase();
+
+/**
+ * 判断当前对象是否有某个属性
+ * @param target 对象
+ * @param k 属性
+ * @returns 
+ */
+export const hasQwnProperty = (target: object, k: string) => {
+  return Object.prototype.hasOwnProperty.call(target, k)
+}
+
+/**
+ * 格式化emit的事件名
+ * @param name 
+ * @returns 
+ */
+export const formatEmitName = (name: string) => {
+  return name ? `on${capitalize(name)}` : "";
+}
+
+/**
+ * 是否是事件名（规范：onEventName）
+ * @param name 名称
+ * @returns 如果满足规范，则返回转换成小写的事件名，如果不满足，则直接返回空
+ */
+export const isEventName = (name: string) => {
+  const isOn = /^on[A-Z]/.test(name);
+  return isOn ? name.slice(2).toLowerCase() : ''
+}
+
+

@@ -1,4 +1,4 @@
-import { isString } from "../../../utils/index";
+import { isString } from "@guide-mini-vue/shared";
 import { NodeTypes } from "./ast";
 import { TO_DISPLAY_STRING, helperNameMap, CREATE_ELEMENT_VNODE } from "./runtimeHelpers";
 

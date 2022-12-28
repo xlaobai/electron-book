@@ -1,5 +1,5 @@
-import { ShapeFlags } from "../../utils/shapeFlags";
-import { effect } from "../reactivity/effect";
+import { ShapeFlags } from "@guide-mini-vue/shared";
+import { effect } from "@guide-mini-vue/reactivity";
 import { createComponentInstance, setupComponent } from "./component";
 import { createAppAPI } from "./createApp";
 import { Component, Vnode } from "./types/index";

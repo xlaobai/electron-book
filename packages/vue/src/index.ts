@@ -1,8 +1,8 @@
-export * from "./runtime-dom/index";
+export * from "@guide-mini-vue/runtime-dom";
 
-import { baseCompile } from "./compiler-core/src";
-import * as runtimeDom  from "./runtime-dom/index";
-import { registerRuntimeCompiler }  from "./runtime-dom/index";
+import { baseCompile } from "@guide-mini-vue/compiler-core";
+import * as runtimeDom  from "@guide-mini-vue/runtime-dom";
+import { registerRuntimeCompiler }  from "@guide-mini-vue/runtime-dom";
 
 function compileToFunction(template) {
     const { code } = baseCompile(template);

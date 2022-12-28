@@ -1,4 +1,4 @@
-import { ShapeFlags } from "../../utils/shapeFlags";
+import { ShapeFlags } from "@guide-mini-vue/shared";
 import { Component } from "./types/index";
 
 /**
@@ -10,7 +10,7 @@ export function initSlots(instance: Component, children: any) {
     const { shapeFlag } = instance.vnode;
 
     // 如果是插槽类型，才进行处理
-    if(shapeFlag & ShapeFlags.SLOT_CHILDREN) {
+    if(shapeFlag & ShapeFlags.SLOTS_CHILDREN) {
         normalizeObjectSlots(children, (instance.slots = {}));
     }
 }
